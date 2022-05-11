@@ -4,12 +4,12 @@ on:
 
 jobs:
   version:
-    uses: noveto-com/shared-workflows/.github/workflows/version.yml@c7154fe45d4c2e43cca499a1949d28e222e05865
+    uses: Myotest/shared-workflows/.github/workflows/version.yml@c7154fe45d4c2e43cca499a1949d28e222e05865
 
   docs:
     if: ${{ github.event_name == 'pull_request' || github.ref == 'refs/heads/main' }}
     needs: version
-    uses: noveto-com/shared-workflows/.github/workflows/docs.yml@39b2e9021108f74fee5d445e0b4c0182aaedd7d3
+    uses: Myotest/shared-workflows/.github/workflows/docs.yml@39b2e9021108f74fee5d445e0b4c0182aaedd7d3
     with:
       version: ${{ needs.version.outputs.version }}
       pdf-name: "sharedworkflows.pdf"
@@ -17,7 +17,7 @@ jobs:
   deploy:
     if: github.ref == 'refs/heads/main'
     needs: [version, docs]
-    uses: noveto-com/shared-workflows/.github/workflows/deploy-s3.yml@76b5848a444c6839d637ec624360a26adf5640f9
+    uses: Myotest/shared-workflows/.github/workflows/deploy-s3.yml@76b5848a444c6839d637ec624360a26adf5640f9
     with:
       version: ${{ needs.version.outputs.version }}
       project: shared-workflows
@@ -29,6 +29,6 @@ jobs:
   release:
     if: github.ref == 'refs/heads/main'
     needs: [version, docs]
-    uses: noveto-com/shared-workflows/.github/workflows/deploy-release.yml@c7154fe45d4c2e43cca499a1949d28e222e05865
+    uses: Myotest/shared-workflows/.github/workflows/deploy-release.yml@c7154fe45d4c2e43cca499a1949d28e222e05865
     with:
       tag: ${{ needs.version.outputs.tag }}
