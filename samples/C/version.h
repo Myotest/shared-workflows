@@ -5,6 +5,6 @@
 #define API_MINOR 8
 #define API_PATCH 0
 
-#define LIB_VERSION "1.8.2"
+#define LIB_VERSION "1.9.0"
 
 #endif  // LIB_VERSION
