@@ -27,7 +27,7 @@ jobs:
 
       - name: New version/tag as comment in PR
         if: ${{ github.event_name == 'pull_request' && (github.event.pull_request.base.ref == 'main' || github.event.pull_request.base.ref == inputs.target-branch) }}
-        uses: peter-evans/create-or-update-comment@v4
+        uses: peter-evans/create-or-update-comment@v5
         with:
           issue-number: ${{ github.event.pull_request.number }}
           body: |
