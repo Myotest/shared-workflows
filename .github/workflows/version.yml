@@ -54,7 +54,7 @@ jobs:
       - name: Pre-calculate for PR to main
         if: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.ref == 'main' }}
         id: version-pr
-        uses: mathieudutour/github-tag-action@v6.2
+        uses: nxlabs-ch/github-tag-action@v6.3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           release_branches: main
@@ -146,7 +146,7 @@ jobs:
       - name: Bump version and push tag
         if: github.ref == 'refs/heads/main'
         id: version-main
-        uses: mathieudutour/github-tag-action@v6.2
+        uses: nxlabs-ch/github-tag-action@v6.3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           commit_sha: ${{ steps.merge.outputs.merge_sha }}
