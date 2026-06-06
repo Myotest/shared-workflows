@@ -44,12 +44,25 @@ It will do the following:
       2. tag: `v1.0.3`
       3. pep440: `1.0.3`
 
-Example:
+## Required Permissions
+
+In your repository, go to **Settings → Actions → General → Workflow permissions** and select **"Read and write permissions"**.
+
+Without this, the workflow will fail with a `403 Resource not accessible by integration` error when trying to post a PR comment.
+
+> **Important:** The settings page has separate **Save** buttons for each section. Make sure to click the Save button in the **Workflow permissions** section specifically.
+> **Note:** For organization repositories, this is typically set at the organization level and does not need to be configured per-repository.
+
+## Example
 
 ``` yaml
 jobs:
   version:
     uses: nxlabs-ch/shared-workflows/.github/workflows/version.yml@main
+    with:
+      ...
+    secrets:
+      FF_MERGE_PAT: ${{ secrets.FF_MERGE_PAT }}
 ```
 
 ## Commit Message Format
