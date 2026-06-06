@@ -75,25 +75,25 @@ jobs:
           NAME: ${{ inputs.name }}
 
       - name: Save artifact (all outputs)
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: kb${{ inputs.kibot-version }}-${{ inputs.name }}-all-${{ inputs.version }}
           path: output
   
       - name: Save artifact (BOM)
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: kb${{ inputs.kibot-version }}-${{ inputs.name }}-bom-${{ inputs.version }}
           path: ${{ inputs.name }}-bom-${{ inputs.version }}.csv
 
       - name: Save artifact (Schematic)
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: kb${{ inputs.kibot-version }}-${{ inputs.name }}-schematic-${{ inputs.version }}
           path: ${{ inputs.name }}-schematic-${{ inputs.version }}.pdf
 
       - name: Save artifact (Project)
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: kb${{ inputs.kibot-version }}-${{ inputs.name }}-project-${{ inputs.version }}
           path: ${{ inputs.name }}-${{ inputs.version }}.tar.gz
