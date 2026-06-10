@@ -57,7 +57,7 @@ jobs:
           submodules: ${{ inputs.submodules }}
 
       - name: Install uv
-        uses: astral-sh/setup-uv@v3
+        uses: astral-sh/setup-uv@v8.2.0
         with:
           version: "0.6.x"
 
@@ -114,7 +114,7 @@ jobs:
         run: make -f ${{ inputs.makefile }} -C ${{ inputs.docs-folder }} html
 
       - name: Upload HTML documentation
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: documentation-${{ steps.project-name.outputs.name }}-html-${{ inputs.version }}
           path: "${{ inputs.docs-folder }}/_build/html/"
@@ -140,7 +140,7 @@ jobs:
 
       - name: Upload PDF documentation
         if: ${{ inputs.build-pdf }}
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: documentation-${{ steps.project-name.outputs.name }}-pdf-${{ inputs.version }}
           path: "${{ inputs.docs-folder }}/_build/latex/${{ steps.rename-pdf.outputs.new-pdf-name }}"

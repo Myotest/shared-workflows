@@ -46,7 +46,7 @@ jobs:
           submodules: ${{ inputs.submodules }}
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: 3.12.9
 
@@ -100,7 +100,7 @@ jobs:
           make -C ${{ inputs.docs-folder }} html
           make -C ${{ inputs.docs-folder }} latexpdf
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: documentation-std-${{ steps.project-name.outputs.name }}-html-${{ inputs.version }}
           path: docs/_build/html/
@@ -118,7 +118,7 @@ jobs:
           echo "new-pdf-name=$NEW_PDF" >> $GITHUB_OUTPUT
         id: rename-pdf
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: documentation-std-${{ steps.project-name.outputs.name }}-pdf-${{ inputs.version }}
           path: "${{ inputs.docs-folder }}/_build/latex/${{ steps.rename-pdf.outputs.new-pdf-name }}"
