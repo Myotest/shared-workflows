@@ -7,7 +7,7 @@
   (paper "A3")
   (title_block
     (date "15 nov 2012")
-    (rev "1.10.0")
+    (rev "1.10.1")
   )
 
   (layers
