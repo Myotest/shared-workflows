@@ -13,9 +13,10 @@ Shared Workflows's documentation
    introduction
    version
    c-version
+   json-version
    rust-version
-   toml-version
    spec-version
+   toml-version
    yaml-version
    kicad-version
    kicad-release

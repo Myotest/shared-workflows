@@ -54,6 +54,13 @@ jobs:
       header_file: samples/C/version.h
       version_define: LIB_VERSION
 
+  check-json-version:
+    needs: version
+    uses: ./.github/workflows/json-version.yml
+    with: 
+      version: ${{ needs.version.outputs.tag }}
+      json_file: samples/json/plugin.json
+
   check-yaml-version:
     needs: version
     uses: ./.github/workflows/yaml-version.yml
