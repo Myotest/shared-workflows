@@ -11,40 +11,15 @@ on:
         description: "The path to the dir with the Cargo.toml file"
         required: true
         type: string
-    
+
 jobs:
-    rust-version:
-        runs-on: ubuntu-24.04
-        steps:
-        - uses: actions/checkout@v6
-
-        - name: Strip v from TAG
-          run: |
-            TAG=${{ inputs.version }}
-            echo "EXPECTED_VERSION=${TAG#v}" >> $GITHUB_ENV
-
-        - name: Get rust version from code
-          id: rust-version
-          run: |
-            echo "app_version=$(head -n 6 $CARGO_TOML_FILE | grep version -m 1 | sed 's/"/ /g' | awk '{print $3}')" >> $GITHUB_OUTPUT
-          env:
-            CARGO_TOML_FILE: ${{ inputs.cargo_toml_dir }}/Cargo.toml
-        
-        - name: Display versions
-          run: |
-            echo "Rust app version: '${{ steps.rust-version.outputs.app_version }}'"
-            echo "Expected version: '$EXPECTED_VERSION'"
-
-        - name: Check rust version
-          run: |
-            if [[ "${{ steps.rust-version.outputs.app_version }}" != "$EXPECTED_VERSION" ]]; then
-                echo "Rust app version mismatch: ${{ steps.rust-version.outputs.app_version }} != $EXPECTED_VERSION"
-                if [[ "$EXPECTED_VERSION" == "" ]]; then
-                    echo "This is a pre-release version, so this is expected."
-                    exit 0
-                else
-                    echo "This is a release version, so this is unexpected."
-                    exit 1
-                fi
-            fi
-
+  rust-version:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v6
+      - uses: ./.github/actions/check-version
+        with:
+          version: ${{ inputs.version }}
+          file: ${{ inputs.cargo_toml_dir }}/Cargo.toml
+          extract_cmd: "head -n 6 \"$FILE\" | grep version -m 1 | sed 's/\"/ /g' | awk '{print $3}'"
+          label: Rust

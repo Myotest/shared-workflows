@@ -11,40 +11,15 @@ on:
         description: "The path and name of the *.spec file"
         required: true
         type: string
-    
+
 jobs:
-    spec-version:
-        runs-on: ubuntu-24.04
-        steps:
-        - uses: actions/checkout@v6
-
-        - name: Strip v from TAG
-          run: |
-            TAG=${{ inputs.version }}
-            echo "EXPECTED_VERSION=${TAG#v}" >> $GITHUB_ENV
-
-        - name: Get spec version from code
-          id: spec-version
-          run: |
-            echo "app_version=$(tail -n 10 $SPEC_FILE | grep version -m 1 | sed "s/'/ /g" | sed "s/\"/ /g" | awk '{print $2}')" >> $GITHUB_OUTPUT
-          env:
-            SPEC_FILE: ${{ inputs.spec_file }}
-        
-        - name: Display versions
-          run: |
-            echo "SPEC app version: '${{ steps.spec-version.outputs.app_version }}'"
-            echo "Expected version: '$EXPECTED_VERSION'"
-
-        - name: Check spec version
-          run: |
-            if [[ "${{ steps.spec-version.outputs.app_version }}" != "$EXPECTED_VERSION" ]]; then
-                echo "SPEC app version mismatch: ${{ steps.spec-version.outputs.app_version }} != $EXPECTED_VERSION"
-                if [[ "$EXPECTED_VERSION" == "" ]]; then
-                    echo "This is a pre-release version, so this is expected."
-                    exit 0
-                else
-                    echo "This is a release version, so this is unexpected."
-                    exit 1
-                fi
-            fi
-
+  spec-version:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v6
+      - uses: ./.github/actions/check-version
+        with:
+          version: ${{ inputs.version }}
+          file: ${{ inputs.spec_file }}
+          extract_cmd: "tail -n 10 \"$FILE\" | grep version -m 1 | sed \"s/'/ /g\" | sed 's/\"/ /g' | awk '{print $2}'"
+          label: SPEC

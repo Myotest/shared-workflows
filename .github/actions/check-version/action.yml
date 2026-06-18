@@ -1,0 +1,55 @@
+name: Check version against TAG version
+description: Extract a version string from a file and compare it against a release TAG
+
+inputs:
+  version:
+    description: "The TAG version string for this release"
+    required: true
+  file:
+    description: "Path to the file containing the version"
+    required: true
+  extract_cmd:
+    description: "Shell command to extract the version string; $FILE env var is set to the file path"
+    required: true
+  label:
+    description: "Human-readable label for the version source, used in log output"
+    required: false
+    default: "File"
+
+runs:
+  using: composite
+  steps:
+    - name: Strip v from TAG
+      shell: bash
+      run: |
+        TAG=${{ inputs.version }}
+        echo "EXPECTED_VERSION=${TAG#v}" >> $GITHUB_ENV
+
+    - name: Extract version from file
+      id: extract
+      shell: bash
+      run: |
+        echo "value=$(eval "$EXTRACT_CMD")" >> $GITHUB_OUTPUT
+      env:
+        FILE: ${{ inputs.file }}
+        EXTRACT_CMD: ${{ inputs.extract_cmd }}
+
+    - name: Display versions
+      shell: bash
+      run: |
+        echo "${{ inputs.label }} version: '${{ steps.extract.outputs.value }}'"
+        echo "Expected version: '$EXPECTED_VERSION'"
+
+    - name: Check version
+      shell: bash
+      run: |
+        if [[ "${{ steps.extract.outputs.value }}" != "$EXPECTED_VERSION" ]]; then
+          echo "${{ inputs.label }} version mismatch: ${{ steps.extract.outputs.value }} != $EXPECTED_VERSION"
+          if [[ "$EXPECTED_VERSION" == "" ]]; then
+            echo "This is a pre-release version, so this is expected."
+            exit 0
+          else
+            echo "This is a release version, so this is unexpected."
+            exit 1
+          fi
+        fi

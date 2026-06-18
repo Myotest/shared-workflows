@@ -11,40 +11,15 @@ on:
         description: "The path and name of the *.json file"
         required: true
         type: string
-    
+
 jobs:
-    json-version:
-        runs-on: ubuntu-24.04
-        steps:
-        - uses: actions/checkout@v6
-
-        - name: Strip v from TAG
-          run: |
-            TAG=${{ inputs.version }}
-            echo "EXPECTED_VERSION=${TAG#v}" >> $GITHUB_ENV
-
-        - name: Get json version from code
-          id: json-version
-          run: |
-            echo "app_version=$(head -n 10 $TOML_FILE | grep version -m 1 | sed 's/"/ /g' | awk '{print $3}')" >> $GITHUB_OUTPUT
-          env:
-            TOML_FILE: ${{ inputs.json_file }}
-        
-        - name: Display versions
-          run: |
-            echo "JSON app version: '${{ steps.json-version.outputs.app_version }}'"
-            echo "Expected version: '$EXPECTED_VERSION'"
-
-        - name: Check json version
-          run: |
-            if [[ "${{ steps.json-version.outputs.app_version }}" != "$EXPECTED_VERSION" ]]; then
-                echo "JSON app version mismatch: ${{ steps.json-version.outputs.app_version }} != $EXPECTED_VERSION"
-                if [[ "$EXPECTED_VERSION" == "" ]]; then
-                    echo "This is a pre-release version, so this is expected."
-                    exit 0
-                else
-                    echo "This is a release version, so this is unexpected."
-                    exit 1
-                fi
-            fi
-
+  json-version:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v6
+      - uses: ./.github/actions/check-version
+        with:
+          version: ${{ inputs.version }}
+          file: ${{ inputs.json_file }}
+          extract_cmd: "head -n 10 \"$FILE\" | grep version -m 1 | sed 's/\"/ /g' | awk '{print $3}'"
+          label: JSON

@@ -12,6 +12,8 @@ Shared Workflows's documentation
 
    introduction
    version
+   check-version
+   check-version-action
    c-version
    json-version
    rust-version

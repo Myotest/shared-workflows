@@ -11,6 +11,15 @@ jobs:
     secrets:
       FF_MERGE_PAT: ${{ secrets.FF_MERGE_PAT }}
 
+  check-version:
+    needs: version
+    uses: ./.github/workflows/check-version.yml
+    with: 
+      version: ${{ needs.version.outputs.tag }}
+      file: docs/pyproject.toml
+      extract_cmd: "head -n 10 \"$FILE\" | grep version -m 1 | sed 's/\"/ /g' | awk '{print $3}'"
+      label: GENERIC-TOML
+
   check-rust-version:
     needs: version
     uses: ./.github/workflows/rust-version.yml

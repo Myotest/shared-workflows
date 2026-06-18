@@ -11,39 +11,15 @@ on:
         description: "The path and name of the *.yaml file"
         required: true
         type: string
-    
+
 jobs:
-    yaml-version:
-        runs-on: ubuntu-24.04
-        steps:
-        - uses: actions/checkout@v6
-
-        - name: Strip v from TAG
-          run: |
-            TAG=${{ inputs.version }}
-            echo "EXPECTED_VERSION=${TAG#v}" >> $GITHUB_ENV
-
-        - name: Get yaml version from code
-          id: yaml-version
-          run: |
-            echo "app_version=$(head -n 10 $YAML_FILE | grep version -m 1 | awk '{print $2}')" >> $GITHUB_OUTPUT
-          env:
-            YAML_FILE: ${{ inputs.yaml_file }}
-        
-        - name: Display versions
-          run: |
-            echo "YAML app version: '${{ steps.yaml-version.outputs.app_version }}'"
-            echo "Expected version: '$EXPECTED_VERSION'"
-
-        - name: Check yaml version
-          run: |
-            if [[ "${{ steps.yaml-version.outputs.app_version }}" != "$EXPECTED_VERSION" ]]; then
-                echo "YAML app version mismatch: ${{ steps.yaml-version.outputs.app_version }} != $EXPECTED_VERSION"
-                if [[ "$EXPECTED_VERSION" == "" ]]; then
-                    echo "This is a pre-release version, so this is expected."
-                    exit 0
-                else
-                    echo "This is a release version, so this is unexpected."
-                    exit 1
-                fi
-            fi
+  yaml-version:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v6
+      - uses: ./.github/actions/check-version
+        with:
+          version: ${{ inputs.version }}
+          file: ${{ inputs.yaml_file }}
+          extract_cmd: "head -n 10 \"$FILE\" | grep version -m 1 | awk '{print $2}'"
+          label: YAML
