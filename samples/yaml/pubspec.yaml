@@ -1,0 +1,22 @@
+name: my_stuff
+description: Implementation of My Stuff.
+
+version: 1.10.0
+publish_to: "none"
+
+environment:
+  sdk: ">=3.11.0 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  # Linter
+  lint: ^2.8.0
+
+flutter:
+  uses-material-design: false

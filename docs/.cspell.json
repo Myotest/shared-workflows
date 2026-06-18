@@ -41,6 +41,7 @@
     "Pipfile",
     "pixi",
     "pointsize",
+    "pubspec",
     "pybuilder",
     "pycache",
     "pyenv",

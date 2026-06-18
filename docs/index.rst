@@ -12,10 +12,14 @@ Shared Workflows's documentation
 
    introduction
    version
+   check-version
+   check-version-action
    c-version
+   json-version
    rust-version
-   toml-version
    spec-version
+   toml-version
+   yaml-version
    kicad-version
    kicad-release
    docs

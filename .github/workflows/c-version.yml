@@ -17,40 +17,15 @@ on:
         required: false
         type: string
         default: "VERSION"
-    
+
 jobs:
-    c-version:
-        runs-on: ubuntu-24.04
-        steps:
-        - uses: actions/checkout@v6
-
-        - name: Strip v from TAG
-          run: |
-            TAG=${{ inputs.version }}
-            echo "EXPECTED_VERSION=${TAG#v}" >> $GITHUB_ENV
-
-        - name: Get C version from code
-          id: c-version
-          run: |
-            echo "lib_version=$(head -n 10 $HEADER_FILE | grep define | grep $VERSION_DEFINE -m 1 | sed 's/"/ /g' | awk '{print $3}')" >> $GITHUB_OUTPUT
-          env:
-            HEADER_FILE: ${{ inputs.header_file }}
-            VERSION_DEFINE: ${{ inputs.version_define }}
-        
-        - name: Display versions
-          run: |
-            echo "C library version: '${{ steps.c-version.outputs.lib_version }}'"
-            echo "Expected version: '$EXPECTED_VERSION'"
-
-        - name: Check C version
-          run: |
-            if [[ "${{ steps.c-version.outputs.lib_version }}" != "$EXPECTED_VERSION" ]]; then
-                echo "C library version mismatch: ${{ steps.c-version.outputs.lib_version }} != $EXPECTED_VERSION"
-                if [[ "$EXPECTED_VERSION" == "" ]]; then
-                    echo "This is a pre-release version, so this is expected."
-                    exit 0
-                else
-                    echo "This is a release version, so this is unexpected."
-                    exit 1
-                fi
-            fi
+  c-version:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v6
+      - uses: ./.github/actions/check-version
+        with:
+          version: ${{ inputs.version }}
+          file: ${{ inputs.header_file }}
+          extract_cmd: "head -n 10 \"$FILE\" | grep define | grep '${{ inputs.version_define }}' -m 1 | sed 's/\"/ /g' | awk '{print $3}'"
+          label: C
