@@ -11,6 +11,15 @@ jobs:
     secrets:
       FF_MERGE_PAT: ${{ secrets.FF_MERGE_PAT }}
 
+  check-version:
+    needs: version
+    uses: ./.github/workflows/check-version.yml
+    with: 
+      version: ${{ needs.version.outputs.tag }}
+      file: docs/pyproject.toml
+      extract_cmd: "head -n 10 \"$FILE\" | grep version -m 1 | sed 's/\"/ /g' | awk '{print $3}'"
+      label: GENERIC-TOML
+
   check-rust-version:
     needs: version
     uses: ./.github/workflows/rust-version.yml
@@ -53,6 +62,20 @@ jobs:
       version: ${{ needs.version.outputs.tag }}
       header_file: samples/C/version.h
       version_define: LIB_VERSION
+
+  check-json-version:
+    needs: version
+    uses: ./.github/workflows/json-version.yml
+    with: 
+      version: ${{ needs.version.outputs.tag }}
+      json_file: samples/json/plugin.json
+
+  check-yaml-version:
+    needs: version
+    uses: ./.github/workflows/yaml-version.yml
+    with: 
+      version: ${{ needs.version.outputs.tag }}
+      yaml_file: samples/yaml/pubspec.yaml
 
   kicad-release-v9:
     needs: [version, check-kicad-version]

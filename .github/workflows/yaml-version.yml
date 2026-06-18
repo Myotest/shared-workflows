@@ -1,4 +1,4 @@
-name: Check version in SPEC file against TAG version
+name: Check version in YAML file against TAG version
 
 on:
   workflow_call:
@@ -7,19 +7,19 @@ on:
         description: "The TAG version string for this release"
         required: true
         type: string
-      spec_file:
-        description: "The path and name of the *.spec file"
+      yaml_file:
+        description: "The path and name of the *.yaml file"
         required: true
         type: string
 
 jobs:
-  spec-version:
+  yaml-version:
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v6
       - uses: ./.github/actions/check-version
         with:
           version: ${{ inputs.version }}
-          file: ${{ inputs.spec_file }}
-          extract_cmd: "tail -n 10 \"$FILE\" | grep version -m 1 | sed \"s/'/ /g\" | sed 's/\"/ /g' | awk '{print $2}'"
-          label: SPEC
+          file: ${{ inputs.yaml_file }}
+          extract_cmd: "head -n 10 \"$FILE\" | grep version -m 1 | awk '{print $2}'"
+          label: YAML

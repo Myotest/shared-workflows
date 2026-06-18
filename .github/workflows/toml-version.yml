@@ -11,40 +11,15 @@ on:
         description: "The path and name of the *.toml file"
         required: true
         type: string
-    
+
 jobs:
-    toml-version:
-        runs-on: ubuntu-24.04
-        steps:
-        - uses: actions/checkout@v6
-
-        - name: Strip v from TAG
-          run: |
-            TAG=${{ inputs.version }}
-            echo "EXPECTED_VERSION=${TAG#v}" >> $GITHUB_ENV
-
-        - name: Get toml version from code
-          id: toml-version
-          run: |
-            echo "app_version=$(head -n 10 $TOML_FILE | grep version -m 1 | sed 's/"/ /g' | awk '{print $3}')" >> $GITHUB_OUTPUT
-          env:
-            TOML_FILE: ${{ inputs.toml_file }}
-        
-        - name: Display versions
-          run: |
-            echo "TOML app version: '${{ steps.toml-version.outputs.app_version }}'"
-            echo "Expected version: '$EXPECTED_VERSION'"
-
-        - name: Check toml version
-          run: |
-            if [[ "${{ steps.toml-version.outputs.app_version }}" != "$EXPECTED_VERSION" ]]; then
-                echo "TOML app version mismatch: ${{ steps.toml-version.outputs.app_version }} != $EXPECTED_VERSION"
-                if [[ "$EXPECTED_VERSION" == "" ]]; then
-                    echo "This is a pre-release version, so this is expected."
-                    exit 0
-                else
-                    echo "This is a release version, so this is unexpected."
-                    exit 1
-                fi
-            fi
-
+  toml-version:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v6
+      - uses: ./.github/actions/check-version
+        with:
+          version: ${{ inputs.version }}
+          file: ${{ inputs.toml_file }}
+          extract_cmd: "head -n 10 \"$FILE\" | grep version -m 1 | sed 's/\"/ /g' | awk '{print $3}'"
+          label: TOML
