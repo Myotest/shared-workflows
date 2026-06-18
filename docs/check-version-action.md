@@ -27,7 +27,7 @@ Note: the action does not perform a `checkout`. The calling workflow or job must
 
 ## Using the action directly
 
-Call the action from a step with `uses: ./.github/actions/check-version`. GitHub resolves the relative path against the `nxlabs-ch/shared-workflows` repository at the same ref as the calling workflow, so no version pin is required.
+Call the action from a step with `uses: ./.github/actions/check-version`. The action is pinned to `@main` so it always tracks the latest version without requiring a versioned release of the action itself.
 
 ```yaml
 jobs:
@@ -39,7 +39,7 @@ jobs:
     needs: version
     steps:
       - uses: actions/checkout@v6
-      - uses: ./.github/actions/check-version
+      - uses: nxlabs-ch/shared-workflows/.github/actions/check-version@main
         with:
           version: ${{ needs.version.outputs.tag }}
           file: src/config.toml
