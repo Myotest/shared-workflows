@@ -1,7 +1,7 @@
 name: my_stuff
 description: Implementation of My Stuff.
 
-version: 1.9.1
+version: 1.10.0
 publish_to: "none"
 
 environment:
