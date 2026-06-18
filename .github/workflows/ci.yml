@@ -54,6 +54,13 @@ jobs:
       header_file: samples/C/version.h
       version_define: LIB_VERSION
 
+  check-yaml-version:
+    needs: version
+    uses: ./.github/workflows/yaml-version.yml
+    with: 
+      version: ${{ needs.version.outputs.tag }}
+      yaml_file: samples/yaml/pubspec.yaml
+
   kicad-release-v9:
     needs: [version, check-kicad-version]
     uses: ./.github/workflows/kicad-release.yml
