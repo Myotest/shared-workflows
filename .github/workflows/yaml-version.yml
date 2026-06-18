@@ -17,7 +17,7 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v6
-      - uses: ./.github/actions/check-version
+      - uses: nxlabs-ch/shared-workflows/.github/actions/check-version@main
         with:
           version: ${{ inputs.version }}
           file: ${{ inputs.yaml_file }}
